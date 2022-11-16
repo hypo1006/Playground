@@ -8,15 +8,10 @@ const app = express();
 // configuration =========================
 app.set('port', process.env.PORT || 3333);
 
-app.get('/', (req, res) => {
-  res.send('sangho');
-});
 
-app.get('/users', (req, res) => {
-  connection.query('SELECT * from Users', (error, rows) => {
-    if (error) throw error;
-    console.log('User info is: ', rows);
-    res.send(rows);
+app.get('/api/get', (req, res) => {
+  connection.query('SELECT * from title', (error, rows) => {
+    
   });
 });
 
