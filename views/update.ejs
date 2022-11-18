@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<h1>수정</h1>
+<form action="/update/<%= board[0].no %>" method="post">
+    no <input type="text" name="no" value="<%= board[0].no %>"<br>
+    contents <input type="text" name="contents" value="<%= board[0].contents %>"<br>
+    <button type="submit">수정</button>
+</form>
+</body>
+</html>
