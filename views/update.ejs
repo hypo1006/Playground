@@ -7,7 +7,7 @@
 <body>
 <h1>수정</h1>
 <form action="/update/<%= board[0].no %>" method="post">
-    no <input type="text" name="no" value="<%= board[0].no %>"<br>
+    no <input type="int" name="no" value="<%= board[0].no %>"<br>
     contents <input type="text" name="contents" value="<%= board[0].contents %>"<br>
     <button type="submit">수정</button>
 </form>
