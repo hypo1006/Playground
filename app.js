@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 const port = 3000;
 const mysql = require('mysql2');
@@ -17,14 +18,9 @@ const conn = {
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 
-// app.post('/index', function(req, res){   
-//     var data = req.body.des 
-//     var query = db.query('INSERT INTO user (des) VALUES (?)',[    
-//         data
-//     ])
-// });
 
-app.get('/GET/list', (req, res) => {
+
+app.get('/board/list', (req, res) => {
     connection.query('select * from board', function (error, results) {
         if (error) throw error;
         res.render('list',{'data':results})
@@ -33,7 +29,7 @@ app.get('/GET/list', (req, res) => {
 
 
 
-app.get('/GET/:no', function(req,res){
+app.get('/board/list/:no', function(req,res){
     var sql = "SELECT * FROM board WHERE NO = ?"; 
 
     connection.query(sql,[req.params.no],function(err, results, fields){  
@@ -44,27 +40,37 @@ app.get('/GET/:no', function(req,res){
 }); // 특정 목록 검색
 
 
-
-app.get('/DELETE/:no', function(req,res){
+app.delete('/board/list/:no', (req,res) => {
     var sql = "DELETE FROM board WHERE NO = ?"; 
 
     connection.query(sql,[req.params.no],function(err, results, fields){  
         if (err) throw err;
         console.log(results) 
-        res.redirect('/GET/list'); 
+        res.redirect('/board/list'); 
     });
-}); // 목록 삭제
+})
 
-app.get('/UPDATE/:no', function(req,res){ 
-    var sql = "SELECT * FROM board WHERE no = ?";
+// app.get('/board/list/:no', function(req,res){ 
+//     var sql = "SELECT * FROM board WHERE no = ?";
     
-    connection.query(sql, [req.params.no],function(err, results, fields){
+//     connection.query(sql, [req.params.no],function(err, results, fields){
+//         if (err) throw err;
+//         console.log(results);
+//         res.render('update',{board : results});
+    
+//     });
+// }); // 목록 업데이트
+
+app.post('/update/2', function(req, res){   
+    var sql = "UPDATE board set no = ? where contents = ?" 
+
+    connection.query(sql, req.body, function(err,results,fields){  
         if (err) throw err;
-        console.log(results);
-        res.render('update',{board : results}); // 쿼리문 날린 results 값을 users 란 key 에 담기 
-        res.redirect('/GET/list'); 
-    });
-}); // 목록 업데이트
+        console.log(results);       
+        res.redirect('/board/list')
+    })
+});
+
 
 
 
