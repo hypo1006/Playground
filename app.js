@@ -1,5 +1,5 @@
+const { request } = require('express');
 const express = require('express');
-
 const app = express();
 const port = 3000;
 const mysql = require('mysql2');
@@ -17,6 +17,7 @@ const conn = {
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
+app.use(express.json());
 
 
 
@@ -32,7 +33,7 @@ app.get('/board/list', (req, res) => {
 app.get('/board/list/:no', function(req,res){
     var sql = "SELECT * FROM board WHERE NO = ?"; 
 
-    connection.query(sql,[req.params.no],function(err, results, fields){  
+    connection.query(sql,[req.params.no],function(err, results){  
         if (err) throw err;
         res.render('list',{'data':results})
         console.log(results);
@@ -43,36 +44,29 @@ app.get('/board/list/:no', function(req,res){
 app.delete('/board/list/:no', (req,res) => {
     var sql = "DELETE FROM board WHERE NO = ?"; 
 
-    connection.query(sql,[req.params.no],function(err, results, fields){  
+    connection.query(sql,[req.params.no],function(err, results){  
         if (err) throw err;
         console.log(results) 
         res.redirect('/board/list'); 
     });
 })
 
-// app.get('/board/list/:no', function(req,res){ 
-//     var sql = "SELECT * FROM board WHERE no = ?";
-    
-//     connection.query(sql, [req.params.no],function(err, results, fields){
-//         if (err) throw err;
-//         console.log(results);
-//         res.render('update',{board : results});
-    
-//     });
-// }); // 목록 업데이트
+app.put('/board/list/:no', function(req,res){ 
+    const no = req.params.no;
+    const title = req.body.title;
+    const contents = req.body.contents;
 
-app.post('/update/2', function(req, res){   
-    var sql = "UPDATE board set no = ? where contents = ?" 
+    var sql = "UPDATE board set title = ?,  contents = ? where no = ?";
 
-    connection.query(sql, req.body, function(err,results,fields){  
-        if (err) throw err;
-        console.log(results);       
-        res.redirect('/board/list')
+    connection.query(sql, [title, contents,no], (err,results) => {  
+        if(err)
+        {
+            console.log(err);
+        }else{
+            res.send("UPDATE!!");
+        }
     })
-});
-
-
-
+}); // 목록 업데이트
 
 app.listen(port, () => {
     console.log('앱 실행중,,,')
